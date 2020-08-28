@@ -1,5 +1,7 @@
+import html
+
 from DBcm import UseDatabase
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 
 from vsearch import search4letters
 
@@ -9,6 +11,18 @@ app.config['dbconfig'] = {'host': '127.0.0.1',
                           'user': 'postgres',
                           'password': 'vsearchpasswd',
                           'database': 'vsearchlogdb', }
+
+
+@app.route('/login')
+def do_login() -> str:
+    session['logged_in'] = True
+    return 'You are now logged in.'
+
+
+@app.route('/logout')
+def do_logout() -> str:
+    session.pop('logged_in')
+    return 'You are now logged out.'
 
 
 def log_request(req: 'flask_request', res: str) -> None:
